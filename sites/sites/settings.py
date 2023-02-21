@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-v2pdm341!(%*l_^f3^a8cb)6(e^wd#=f#9h5ueezrxy1fartaf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -40,17 +40,31 @@ INSTALLED_APPS = [
 
     "rest_framework",
     'project',
+    'corsheaders',
 ]
+
+# REST_FRAMEWORK = {
+#     "DEFAULT_PERMISSION_CLASSES":[
+#         'rest_framework.permission.AllowAny'
+#     ]
+#
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+#    'corsheaders.middleware.CorsMiddleware'
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+# CORS_ORIGIN_WHITELIST = (
+#     'htt://localhost:3000',
+#     'htt://localhost:8000'
+#
+# )
 
 ROOT_URLCONF = 'sites.urls'
 
@@ -132,3 +146,19 @@ MEDIA_ROOT = BASE_DIR.joinpath('media')
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES":[
+        'rest_framework.renderers.JSONRenderer',  #### bu esa post ham create qilib bolmaydi render ishlamidi malumotlarni json holatida ham korsatmidi
+        'rest_framework.renderers.BrowsableAPIRenderer', ##### bu ishlamasa json holatda korsatadi lekin post, put, delete, get ishlamidi
+
+],
+ 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',    ##### buni vazifasi pagelarga ajratib berishdir
+    'PAGE_SIZE': 2,
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+        #'rest_framework.permissions.AllowAny',
+    ]
+
+}
